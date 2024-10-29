@@ -43,6 +43,7 @@
   <!-- Template Stylesheet -->
   <link href=".././css/style.css" rel="stylesheet">
   <link href=".././css/app.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -58,7 +59,7 @@
           <a href="./dashboard.php" class="nav-item nav-link active">Dashboard</a>
           <a href="./budget.php" class="nav-item nav-link active">Budget Calculator</a>
           <a href="#" class="nav-item nav-link active">Save The Date</a>
-          <a href="#" class="nav-item nav-link active">Wedding Checklist</a>
+          <a href="./checklist.php" class="nav-item nav-link active">Wedding Checklist</a>
           <a href="#" class="nav-item nav-link active">Vendors</a>
           <a href="./edit.php" class="bg-secondary rounded text-white mx-1 nav-item nav-link">Edit Profile</a>
           <a href="./logout.php" class="bg-primary rounded text-white nav-item nav-link">Logout</a>
@@ -68,12 +69,16 @@
   </div>
 
 
-  <div class="container-fluid py-5">
-    <div class="container py-5">
+  <div class="container-fluid">
+    <!-- <canvas id="pieChart" width="400" height="400"></canvas> -->
+
+    <div class="container">
+      <canvas id="test_canvas" width="400" height="400"></canvas>
       <h1 class="mb-4">Budget Calculator</h1>
 
       <div class="row g-5">
         <div class="col-md-12 col-lg-6 col-xl-7">
+
           <div class="row py-4">
             <div class="">
               <div class="form-item w-100">
@@ -254,5 +259,74 @@
     <!-- Checkout Page End -->
 
   </div>
+  <script>
+    // const canvas = document.getElementById('pieChart');
+    // const ctx = canvas.getContext('2d');
+
+    var data = [
+      ["Venue", 10],
+      ["Venue Decoration", 15],
+      ["Catering", 20],
+      ["Photography & Videography", 10],
+      ["Wedding Cake", 10],
+      ["MC", 5],
+      ["Event_Personnels", 10],
+      ["Entertainment", 10],
+      ["Transportation", 10]
+    ];
+    var colors = ["blue", "red", "yellow", "green", "black", "orange", "purple", "teal", "lemon"];
+
+    var canvas = document.getElementById("test_canvas");
+    var context = canvas.getContext("2d");
+
+    // get length of data array 
+    var dataLength = data.length;
+    // declare variable to store the total of all values 
+    var total = 0;
+
+    // calculate total 
+    for (var i = 0; i < dataLength; i++) {
+      // add data value to total 
+      total += data[i][1];
+    }
+
+    // declare X and Y coordinates of the mid-point and radius 
+    var x = 100;
+    var y = 100;
+    var radius = 100;
+
+    // declare starting point (right of circle) 
+    var startingPoint = 0;
+
+    for (var i = 0; i < dataLength; i++) {
+      // calculate percent of total for current value 
+      var percent = data[i][1] * 100 / total;
+
+      // calculate end point using the percentage (2 is the final point for the chart) 
+      var endPoint = startingPoint + (2 / 100 * percent);
+
+      // draw chart segment for current element 
+      context.beginPath();
+      // select corresponding color 
+      context.fillStyle = colors[i];
+      context.moveTo(x, y);
+      context.arc(x, y, radius, startingPoint * Math.PI, endPoint * Math.PI);
+      context.fill();
+
+      // starting point for next element 
+      startingPoint = endPoint;
+
+      // draw labels for each element 
+      context.rect(220, 25 * i, 15, 15);
+      context.fill();
+      context.fillStyle = "black";
+      context.fillText(data[i][0] + " (" + data[i][1] + ")", 245, 25 * i + 15);
+    }
+
+    // draw title 
+    context.font = "20px Arial";
+    context.textAlign = "center";
+    context.fillText("Budget Breakdown", 100, 225);
+  </script>
 
   <?php include("./incl/footer.php"); ?>
