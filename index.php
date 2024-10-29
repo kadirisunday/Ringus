@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+// include './Admin/admin/init.php';
 include("./config/connection.php");
 
 // if (!isset($_SESSION['username'])) {
@@ -142,86 +142,39 @@ include("./includes/header.php");
         <div class="row g-4">
             <div class="col-lg-12">
                 <div class="row g-4">
-                    <div class="col-md-6 col-lg-4 col-xl-3">
-                        <div class="rounded position-relative fruite-item">
-                            <div class="fruite-img">
-                                <img src="img/fruite-item-5.jpg" class="img-fluid w-100 rounded-top" alt="">
-                            </div>
-                            <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
-                                style="top: 10px; left: 10px;">DeeJay</div>
-                            <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                <h4>DJ Rolex</h4>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te
-                                    incididunt</p>
-                                <div class="d-flexitems-center flex-lg-wrap">
+                    <?php
+                    $allItems = "SELECT * from vendors";
+                    $result = $conn->query($allItems);
+                    if ($result->num_rows > 0) {
+                        // Output data of each row
+                        while ($row = $result->fetch_assoc()) {
 
-                                    <a href="#"
-                                        class="btn border border-secondary rounded-pill px-3 text-primary"><i
-                                            class="fa fa-user me-2 text-primary"></i> View</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4 col-xl-3">
-                        <div class="rounded position-relative fruite-item">
-                            <div class="fruite-img">
-                                <img src="img/fruite-item-5.jpg" class="img-fluid w-100 rounded-top" alt="">
-                            </div>
-                            <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
-                                style="top: 10px; left: 10px;">Venue</div>
-                            <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                <h4>Alpha Events</h4>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te
-                                    incididunt</p>
-                                <div class="d-flexitems-center flex-lg-wrap">
+                            echo '<div class="col-md-6 col-lg-4 col-xl-3">';
+                            echo '<div class="rounded position-relative fruite-item">';
+                            echo '<div class="fruite-img">';
+                            echo "<img class='img-fluid w-100 rounded-top' src='Vendor/uploads/" . $row['picture'] .  "alt='Vendors image' />";
+                            echo '</div>';
+                            echo "<div class='text-white bg-secondary px-3 py-1 rounded position-absolute'
+                                style='top: 10px; left: 10px;'>" . $row['description'] . "</div>";
+                            echo "<div class='p-4 border border-secondary border-top-0 rounded-bottom'>";
+                            echo "<h4>" . $row['name'] . "</h4>";
+                            echo "<span>" . $row['state'] . "</span>";
+                            echo "<span>" . $row['country'] . "</span>";
+                            echo "<p>" . $row['price'] . "</p>";
+                            echo "<div class='d-flexitems-center flex-lg-wrap'>";
 
-                                    <a href="#"
-                                        class="btn border border-secondary rounded-pill px-3 text-primary"><i
-                                            class="fa fa-user me-2 text-primary"></i> View</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4 col-xl-3">
-                        <div class="rounded position-relative fruite-item">
-                            <div class="fruite-img">
-                                <img src="img/fruite-item-5.jpg" class="img-fluid w-100 rounded-top" alt="">
-                            </div>
-                            <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
-                                style="top: 10px; left: 10px;">Decoration</div>
-                            <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                <h4>Sosa Decor</h4>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te
-                                    incididunt</p>
-                                <div class="d-flexitems-center flex-lg-wrap">
-
-                                    <a href="#"
-                                        class="btn border border-secondary rounded-pill px-3 text-primary"><i
-                                            class="fa fa-user me-2 text-primary"></i> View</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4 col-xl-3">
-                        <div class="rounded position-relative fruite-item">
-                            <div class="fruite-img">
-                                <img src="img/fruite-item-5.jpg" class="img-fluid w-100 rounded-top" alt="">
-                            </div>
-                            <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
-                                style="top: 10px; left: 10px;">Catering</div>
-                            <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                <h4>Havannah Foods</h4>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te
-                                    incididunt</p>
-                                <div class="d-flexitems-center flex-lg-wrap">
-
-                                    <a href="#"
-                                        class="btn border border-secondary rounded-pill px-3 text-primary"><i
-                                            class="fa fa-user me-2 text-primary"></i> View</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                            echo "<a href=''
+                                        class='btn border border-secondary rounded-pill px-3 text-primary'><i
+                                            class='fa fa-user me-2 text-primary'></i> View</a>";
+                            echo '</div>';
+                            echo '</div>';
+                            echo "</div>";
+                            echo "</div>";
+                        }
+                    } else {
+                        echo "0 results";
+                    }
+                    ?>
 
 
 

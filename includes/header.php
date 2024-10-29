@@ -56,7 +56,8 @@
                     </div>
                     <a href="#" class="nav-item nav-link">About Us</a>
                     <a href="#" class="nav-item nav-link">Contact</a>
-                    <a href=".././User/login.php" class="bg-secondary rounded text-white mx-1 nav-item nav-link">Login</a>
+                    <a href="../Vendor/register.php" class="nav-item nav-link">Become A Vendor</a>
+                    <a href="../User/login.php" class="bg-secondary rounded text-white mx-1 nav-item nav-link">Login</a>
                     <a href="../User/register.php" class="bg-primary rounded text-white nav-item nav-link">Register</a>
                 </div>
             </div>
