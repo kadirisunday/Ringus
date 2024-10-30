@@ -29,6 +29,71 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .accordion {
+            cursor: pointer;
+            padding: 18px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 16px;
+            transition: 0.4s;
+        }
+
+        .panel {
+            display: none;
+            padding: 0 18px;
+            background-color: #f9f9f9;
+            overflow: hidden;
+        }
+
+        .checklist-item {
+            display: flex;
+
+            margin: 10px 0;
+        }
+
+        .checklist-item label {
+
+            color: black;
+            text-align: left;
+            font-size: 18px;
+
+        }
+
+        .checklist-item input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .checklist-item.checked label {
+            text-decoration: line-through;
+            color: gray;
+
+        }
+
+        .progress-bar-container {
+            background-color: #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            height: 20px;
+            width: 0%;
+            background-color: #28a745;
+            text-align: center;
+            color: white;
+            border-radius: 8px;
+        }
+    </style>
 </head>
 
 <body>
