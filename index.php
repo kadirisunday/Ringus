@@ -52,7 +52,7 @@ include("./includes/header.php");
                         <i class="fas fa-calculator fa-3x text-white"></i>
                     </div>
                     <div class="featurs-content text-center">
-                        <h5><a href="../User/login.php" class="my-auto">Budget Calculator</a></h5>
+                        <h5><a href="./budget.php" class="my-auto">Budget Calculator</a></h5>
                     </div>
                 </div>
             </div>
@@ -62,7 +62,7 @@ include("./includes/header.php");
                         <i class="fas fa-list fa-3x text-white"></i>
                     </div>
                     <div class="featurs-content text-center">
-                        <h5><a href="../User/login.php" class="my-auto">Wedding Checklist</a></h5>
+                        <h5><a href="./checklist.php" class="my-auto">Wedding Checklist</a></h5>
                         <!-- <p class="mb-0">100% security payment</p> -->
                     </div>
                 </div>
@@ -84,7 +84,7 @@ include("./includes/header.php");
                         <i class="fa fa-user fa-3x text-white"></i>
                     </div>
                     <div class="featurs-content text-center">
-                        <h5><a href="#vendors" class="my-auto">Vendors</a></h5>
+                        <h5><a href="./vendors.php" class="my-auto">Vendors</a></h5>
                         <!-- <p class="mb-0">Support every time fast</p> -->
                     </div>
                 </div>

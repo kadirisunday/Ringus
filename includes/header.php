@@ -48,10 +48,10 @@
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Features</a>
                         <div class="dropdown-menu m-0 bg-secondary rounded-0">
-                            <a href="../User/login.php" class="dropdown-item">Budget Calculator</a>
+                            <a href="../budget.php" class="dropdown-item">Budget Calculator</a>
                             <a href="../User/login.php" class="dropdown-item">Save The Date</a>
-                            <a href="../User/login.php" class="dropdown-item">Wedding Checklist</a>
-                            <a href="./vendors.html" class="dropdown-item">Vendors</a>
+                            <a href="../checklist.php" class="dropdown-item">Wedding Checklist</a>
+                            <a href="../vendors.php" class="dropdown-item">Vendors</a>
                         </div>
                     </div>
                     <a href="#" class="nav-item nav-link">About Us</a>

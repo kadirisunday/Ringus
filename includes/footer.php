@@ -45,7 +45,7 @@
                 <div class="d-flex flex-column text-start footer-item">
                     <h4 class="text-light mb-3">Account</h4>
                     <a class="btn-link" href="../Vendor/register.php">Become A Vendor</a>
-                    <a class="btn-link" href="">All Vendors</a>
+                    <a class="btn-link" href="../vendors.php">All Vendors</a>
                     <a class="btn-link" href="">Register</a>
                     <a class="btn-link" href="">FAQs & Help</a>
                     <a class="btn-link" href="">Order History</a>
