@@ -1,104 +1,581 @@
 <?php
-// Start the session
 session_start();
 
-// Initialize the checklist if it doesn't exist
-if (!isset($_SESSION['checklist'])) {
-    $_SESSION['checklist'] = [];
+include(".././config/connection.php");
+
+
+if (!isset($_SESSION['username'])) {
+    include("./incl/header.php");
+} else {
+
+    include("./incl/header-dashboard.php");
 }
 
-// Handle form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['item']) && !empty($_POST['item'])) {
-        $_SESSION['checklist'][] = htmlspecialchars($_POST['item']);
-    }
-
-    // Remove checked items
-    if (isset($_POST['checked_items'])) {
-        foreach ($_POST['checked_items'] as $checked_item) {
-            if (($key = array_search($checked_item, $_SESSION['checklist'])) !== false) {
-                unset($_SESSION['checklist'][$key]);
-            }
-        }
-    }
-}
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <title>RingUs</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="" name="keywords">
-    <meta content="" name="description">
-
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap"
-        rel="stylesheet">
-
-    <!-- Icon Font Stylesheet -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-
-    <!-- Libraries Stylesheet -->
-    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+<?php include("./incl/user-header.php"); ?>
+<div class="container-fluid">
 
 
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href=".././css/bootstrap.min.css" rel="stylesheet">
+    <div class="row g-4">
 
-    <!-- Template Stylesheet -->
-    <link href=".././css/style.css" rel="stylesheet">
-    <link href=".././css/app.css" rel="stylesheet">
 
-</head>
+        <div class="col-lg-2 rounded bg-light">
 
-<body>
 
-    <div class="container px-0">
-        <nav class="navbar navbar-light bg-white navbar-expand-xl">
-            <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarCollapse">
-                <span class="fa fa-bars text-primary"></span>
-            </button>
-            <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
-                <div class="navbar-nav mx-auto">
-                    <a href="./dashboard.php" class="nav-item nav-link active">Dashboard</a>
-                    <a href="./budget.php" class="nav-item nav-link active">Budget Calculator</a>
-                    <a href="#" class="nav-item nav-link active">Save The Date</a>
-                    <a href="#" class="nav-item nav-link active">Wedding Checklist</a>
-                    <a href="#" class="nav-item nav-link active">Vendors</a>
-                    <a href="./edit.php" class="bg-secondary rounded text-white mx-1 nav-item nav-link">Edit Profile</a>
-                    <a href="./logout.php" class="bg-primary rounded text-white nav-item nav-link">Logout</a>
+
+        </div>
+        <div class="col-lg-8">
+            <div id="accordion-container" class="featurs-item text-center p-2">
+
+                <div class="w-100 accordion btn bg-white text-primary text-center py-3"><i class="bi bi-arrow-down-circle-fill"></i>12 MONTHS BEFORE THE WEDDING</div>
+
+                <div class="panel">
+                    <p class="text-dark">Congratulations on your engagement! Now, take a moment to enjoy this exciting time.
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="progress-bar">0%</div>
+                    </div>
+                    <div class="checklist">
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Choose your wedding date.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Envision your wedding style.
+                                - Consider the color scheme, location, theme, timing, and the overall atmosphere you'd like to have.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Sit down and have your first of many guest lists.
+                                Discuss it with your partner, and don't forget to ask your parents for their input. This guest list should include (the must be invited, should be invited and would be nice to invite) you can refine and scale down the list as you go.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Figure out a budget for your wedding. RingUs offers a helpful budget calculator and track sheet to help you stay organized.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Allocate funds to different vendor category (The Ringus budget calculator helps you simplify this process)</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Narrow down your venue options.
+                                - Focus on both the ceremony and reception locations based on your vision and preferred area.</label>
+                        </div>
+                    </div>
+                    <!-- Add New Item -->
+                    <div class="add-item">
+                        <input type="text" class="w-100 form-control border-0 py-3 mb-4" placeholder="Add new item...">
+                        <button class="w-100 btn form-control border-secondary py-3 bg-white text-primary" onclick="addItem(this)">Add</button>
+                    </div>
+
+                </div>
+
+
+                <!-- 11 Months 2 -->
+                <div class="w-100 accordion btn bg-white text-primary text-center my-3"><i class="bi bi-arrow-down-circle-fill"></i>11 Months </div>
+                <div class="panel">
+                    <p class="text-dark">Develop a record keeping system for payments for all vendors</p>
+                    <!-- Progress Bar -->
+                    <div class="progress-bar-container">
+                        <div class="progress-bar">0%</div>
+                    </div>
+                    <div class="checklist">
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Create a hashtag for your special day. A hashtag will help you document the engagement and actual wedding. It will also engage your friends, family, and guests who are unable to attend your wedding.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>If you would like a wedding crest, research and book a graphics designer to design one for you.
+                                Create a basic website to announce your wedding, send out information to your guests and collect RSVPs.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Research and visit potential venues.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Secure your ceremony and reception venue.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Understand what is included in the package (catering, rentals, etc.)</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Decide who you want as bridesmaids, groomsmen, and other attendants. Ask them formally, giving them plenty of notice.</label>
+                        </div>
+                    </div>
+
+
+
+                    <!-- Add New Item -->
+                    <div class="add-item">
+                        <input type="text" class="w-100 form-control border-0 py-3 mb-4" placeholder="Add new item...">
+                        <button class="w-100 btn form-control border-secondary py-3 bg-white text-primary" onclick="addItem(this)">Add</button>
+                    </div>
+                </div>
+
+
+                <!-- 10 Months  -->
+                <div class="w-100 accordion btn bg-white text-primary text-center my-3"><i class="bi bi-arrow-down-circle-fill"></i>10 Months </div>
+                <div class="panel">
+                    <!-- <p class="text-dark">Develop a record keeping system for payments for all vendors</p> -->
+                    <div class="checklist">
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Start shopping for wedding attire. Make appointments at bridal and clothing shops as needed.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Begin browsing bridal shops and trying on dresses.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Consider bringing key people to fittings, like family or close friends.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Once you’ve booked your wedding photographer, shoot pre-wedding photos (especially if you’re using them for save the dates)</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Design/order your Save The Date.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Finalize your guest list (Our Guest Manager App can help you with this)</label>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-bar-container">
+                        <div class="progress-bar">0%</div>
+                    </div>
+
+                    <!-- Add New Item -->
+                    <div class="add-item">
+                        <input type="text" class="w-100 form-control border-0 py-3 mb-4" placeholder="Add new item...">
+                        <button class="w-100 btn form-control border-secondary py-3 bg-white text-primary" onclick="addItem(this)">Add</button>
+                    </div>
+                </div>
+
+                <!-- 9 Months  -->
+                <div class="w-100 accordion btn bg-white text-primary text-center my-3"><i class="bi bi-arrow-down-circle-fill"></i>9 Months </div>
+                <div class="panel">
+                    <!-- <p class="text-dark">Develop a record keeping system for payments for all vendors</p> -->
+                    <div class="checklist">
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Ensure your passport is up to date for travel. If it isn't, renew. Also, make sure to obtain any required visas and meet other travel requirements for your honeymoon or marriage licence, if necessary.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Research different food options for your reception and begin selecting and booking caterers.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Once your guest list is finalized, send out your "Save the Date" cards.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Choose the colors (following your wedding color and theme) and designs for your wedding party’s outfits.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Decide if you'd like to provide Aso-ebi (uniformed outfits) for your guests. If so, start shopping for fabric and keep track of guests interested in purchasing it by adding a column to your guest management spreadsheet.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>If it fits your budget, hire a "Day of Coordinator" to help with wedding-day logistics. (We can assist you in finding the best coordinators in the event industry using our app!)</label>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-bar-container">
+                        <div class="progress-bar">0%</div>
+                    </div>
+
+                    <!-- Add New Item -->
+                    <div class="add-item">
+                        <input type="text" class="w-100 form-control border-0 py-3 mb-4" placeholder="Add new item...">
+                        <button class="w-100 btn form-control border-secondary py-3 bg-white text-primary" onclick="addItem(this)">Add</button>
+                    </div>
+                </div>
+
+
+                <!-- 8 Months  -->
+                <div class="w-100 accordion btn bg-white text-primary text-center my-3"><i class="bi bi-arrow-down-circle-fill"></i>8 Months </div>
+                <div class="panel">
+                    <!-- <p class="text-dark">Develop a record keeping system for payments for all vendors</p> -->
+                    <div class="checklist">
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>If you want a bridal shower or party, share this idea with your friends and ask if they’d help organize it for you.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Research and book your wedding officiant.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>For inspiration on cakes, decorations, centerpieces, souvenirs etc explore wedding blogs or check out the ideas on RingUs.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Decide on the type of music you want for your big day—whether you prefer a DJ or a live band and start searching for vendors that fit your event style.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Look into different hairstyles and bridal makeup options, and narrow down your favorites.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>If you're considering a civil ceremony, now is a good time to research the process and what it entails.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>And finally, after all this planning, give yourself a break by starting to research honeymoon destinations. Focus on places that fit your budget to help narrow down your options.</label>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-bar-container">
+                        <div class="progress-bar">0%</div>
+                    </div>
+
+                    <!-- Add New Item -->
+                    <div class="add-item">
+                        <input type="text" class="w-100 form-control border-0 py-3 mb-4" placeholder="Add new item...">
+                        <button class="w-100 btn form-control border-secondary py-3 bg-white text-primary" onclick="addItem(this)">Add</button>
+                    </div>
+                </div>
+
+                <!-- 7 Months  -->
+                <div class="w-100 accordion btn bg-white text-primary text-center my-3"><i class="bi bi-arrow-down-circle-fill"></i>7 Months </div>
+                <div class="panel">
+                    <!-- <p class="text-dark">Develop a record keeping system for payments for all vendors</p> -->
+                    <div class="checklist">
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Find and hire your decorator.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Select and book your florist for the bridal bouquet, boutonnieres, bridesmaid bouquets, and flower girl arrangements.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Choose and secure your cake baker. If possible, schedule cake tastings as well.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Research and book your caterer.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>If you’re opting for comfort food, canapés, small bites, grilled items, and desserts, now’s the time to finalize your selections and start booking.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Look into and book your beverage provider. (wine, soft drinks, water, juices, champagne etc)</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Once you've decided on your music entertainment (DJ, live band, or both), proceed to research and book them.</label>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-bar-container">
+                        <div class="progress-bar">0%</div>
+                    </div>
+
+                    <!-- Add New Item -->
+                    <div class="add-item">
+                        <input type="text" class="w-100 form-control border-0 py-3 mb-4" placeholder="Add new item...">
+                        <button class="w-100 btn form-control border-secondary py-3 bg-white text-primary" onclick="addItem(this)">Add</button>
+                    </div>
+                </div>
+
+                <!-- 6 Months  -->
+                <div class="w-100 accordion btn bg-white text-primary text-center my-3"><i class="bi bi-arrow-down-circle-fill"></i>6 Months </div>
+                <div class="panel">
+                    <!-- <p class="text-dark">Develop a record keeping system for payments for all vendors</p> -->
+                    <div class="checklist">
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Decide whether you’ll serve cocktails and/or mocktails at your wedding reception. Once you’ve made your choice, research and make the necessary bookings.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Schedule a meeting with your officiant to discuss the ceremony details and, if applicable, begin marital counseling.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Create your wedding registry.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Arrange fitting appointments and delivery dates for your dress and the wedding party’s attire.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Order your wedding invitations and any related stationery.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>If you’re interested in ambience lighting or special effects for your wedding, research vendors and make bookings.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Start planning additional wedding-related events, such as the after-party, brunch, welcome party, and rehearsal dinner.</label>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-bar-container">
+                        <div class="progress-bar">0%</div>
+                    </div>
+
+                    <!-- Add New Item -->
+                    <div class="add-item">
+                        <input type="text" class="w-100 form-control border-0 py-3 mb-4" placeholder="Add new item...">
+                        <button class="w-100 btn form-control border-secondary py-3 bg-white text-primary" onclick="addItem(this)">Add</button>
+                    </div>
+                </div>
+
+                <!-- 5 Months  -->
+                <div class="w-100 accordion btn bg-white text-primary text-center my-3"><i class="bi bi-arrow-down-circle-fill"></i>5 Months </div>
+                <div class="panel">
+                    <!-- <p class="text-dark">Develop a record keeping system for payments for all vendors</p> -->
+                    <div class="checklist">
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Start shopping for your spouse’s wedding gift.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Make reservations for the wedding night as needed</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Arrange hotel accommodation for your wedding party</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Book your honeymoon destination.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Explore wedding ring options and make your decision.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Research and get souvenirs for your wedding party and guests</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Finalize your guest list</label>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-bar-container">
+                        <div class="progress-bar">0%</div>
+                    </div>
+
+                    <!-- Add New Item -->
+                    <div class="add-item">
+                        <input type="text" class="w-100 form-control border-0 py-3 mb-4" placeholder="Add new item...">
+                        <button class="w-100 btn form-control border-secondary py-3 bg-white text-primary" onclick="addItem(this)">Add</button>
+                    </div>
+                </div>
+
+                <!-- 4 Months  -->
+                <div class="w-100 accordion btn bg-white text-primary text-center my-3"><i class="bi bi-arrow-down-circle-fill"></i>4 Months </div>
+                <div class="panel">
+                    <!-- <p class="text-dark">Develop a record keeping system for payments for all vendors</p> -->
+                    <div class="checklist">
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Set the date, time, and location for the rehearsal dinner.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Address invitation cards or consider hiring a calligrapher.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Shop for wedding rings, and explore engraving options if desired.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Check requirements for marriage licences.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Research and book ushering services.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Look into and secure event security personnel.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Arrange transportation for yourself, your wedding party, and any other guests if needed.</label>
+                        </div>
+
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Ensure your passport is up to date if you plan to travel abroad for your honeymoon.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Book any remaining wedding service you need.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Once you’ve decided on a civil ceremony, begin the necessary preparations.</label>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-bar-container">
+                        <div class="progress-bar">0%</div>
+                    </div>
+
+                    <!-- Add New Item -->
+                    <div class="add-item">
+                        <input type="text" class="w-100 form-control border-0 py-3 mb-4" placeholder="Add new item...">
+                        <button class="w-100 btn form-control border-secondary py-3 bg-white text-primary" onclick="addItem(this)">Add</button>
+                    </div>
+                </div>
+
+                <!-- 3 Months  -->
+                <div class="w-100 accordion btn bg-white text-primary text-center my-3"><i class="bi bi-arrow-down-circle-fill"></i>3 Months </div>
+                <div class="panel">
+                    <!-- <p class="text-dark">Develop a record keeping system for payments for all vendors</p> -->
+                    <div class="checklist">
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Start shopping for your spouse’s wedding gift.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Make reservations for the wedding night as needed</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Arrange hotel accommodation for your wedding party</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Book your honeymoon destination.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Explore wedding ring options and make your decision.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Research and get souvenirs for your wedding party and guests</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="check-item">
+                            <label>Finalize your guest list</label>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-bar-container">
+                        <div class="progress-bar">0%</div>
+                    </div>
+
+                    <!-- Add New Item -->
+                    <div class="add-item">
+                        <input type="text" class="w-100 form-control border-0 py-3 mb-4" placeholder="Add new item...">
+                        <button class="w-100 btn form-control border-secondary py-3 bg-white text-primary" onclick="addItem(this)">Add</button>
+                    </div>
                 </div>
             </div>
-        </nav>
+        </div>
+        <div class="col-lg-2 rounded bg-light">
+
+
+
+        </div>
+
     </div>
-    <h1>Checklist</h1>
 
-    <form method="POST">
-        <input type="text" name="item" placeholder="Add new item" required>
-        <button type="submit">Add</button>
-    </form>
 
-    <form method="POST">
-        <ul>
-            <?php foreach ($_SESSION['checklist'] as $item): ?>
-                <li>
-                    <input type="checkbox" name="checked_items[]" value="<?= htmlspecialchars($item) ?>">
-                    <?= htmlspecialchars($item) ?>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-        <button type="submit">Remove Checked Items</button>
-    </form>
 
-</body>
+</div>
 
-</html>
+<script>
+    // Toggle accordion panels
+    document.querySelectorAll('.accordion').forEach(accordion => {
+        accordion.addEventListener('click', function() {
+            this.classList.toggle('active');
+            const panel = this.nextElementSibling;
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        });
+    });
+
+    // Add event listeners for initial checklist items
+    document.querySelectorAll('.check-item').forEach(item => {
+        item.addEventListener('change', updateProgress);
+    });
+
+    // Function to add a new checklist item
+    function addItem(button) {
+        const panel = button.closest('.panel');
+        const checklist = panel.querySelector('.checklist');
+        const input = panel.querySelector('.add-item input[type="text"]');
+        const itemText = input.value.trim();
+
+        if (itemText) {
+            // Create a new checklist item
+            const newItem = document.createElement('div');
+            newItem.classList.add('checklist-item');
+            newItem.innerHTML = `<input type="checkbox" class="check-item"><label>${itemText}</label>`;
+            checklist.appendChild(newItem);
+
+            // Add event listener to the new checkbox
+            newItem.querySelector('input[type="checkbox"]').addEventListener('change', updateProgress);
+
+            // Clear the input field
+            input.value = '';
+
+            // Update progress bar
+            updateProgress.call(newItem.querySelector('input[type="checkbox"]'));
+        }
+    }
+
+    // Function to update the progress bar based on checked items
+    function updateProgress() {
+        const panel = this.closest('.panel');
+        const checkItems = panel.querySelectorAll('.check-item');
+        const progressBar = panel.querySelector('.progress-bar');
+
+        let checkedItems = 0;
+        checkItems.forEach(item => {
+            if (item.checked) {
+                item.parentElement.classList.add('checked');
+                checkedItems++;
+            } else {
+                item.parentElement.classList.remove('checked');
+            }
+        });
+
+        const progressPercentage = Math.round((checkedItems / checkItems.length) * 100);
+        progressBar.style.width = `${progressPercentage}%`;
+        progressBar.textContent = `${progressPercentage}%`;
+    }
+</script>
+
+
+<?php include("incl/footer.php"); ?>

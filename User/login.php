@@ -21,73 +21,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Check if username is empty
     if (empty(trim($_POST['username']))) {
-        $username_err = 'Please enter username.';
+        echo 'Please enter username.';
     } else {
         $username = trim($_POST['username']);
     }
 
     // Check if password is empty
     if (empty(trim($_POST['password']))) {
-        $password_err = 'Please enter your password.';
+        echo 'Please enter your password.';
     } else {
         $password = trim($_POST['password']);
     }
 
-    // Validate credentials
-    if (empty($username_err) && empty($password_err)) {
-        // Prepare a select statement
-        $sql = 'SELECT id, username, password FROM users WHERE username = ?';
 
-        if ($stmt = $conn->prepare($sql)) {
+    $sql = 'SELECT id, username, password FROM users WHERE username = ?';
 
-            // Set parmater
-            $param_username = $username;
+    if ($stmt = $conn->prepare($sql)) {
 
-            // Bind param to statement
-            $stmt->bind_param('s', $param_username);
+        // Set parmater
+        $param_username = $username;
 
-            // Attempt to execute
-            if ($stmt->execute()) {
+        // Bind param to statement
+        $stmt->bind_param('s', $param_username);
 
-                // Store result
-                $stmt->store_result();
+        // Attempt to execute
+        if ($stmt->execute()) {
 
-                // Check if username exists. Verify user exists then verify
-                if ($stmt->num_rows == 1) {
-                    // Bind result into variables
-                    $stmt->bind_result($id, $username, $hashed_password);
+            // Store result
+            $stmt->store_result();
 
-                    if ($stmt->fetch()) {
-                        if (password_verify($password, $hashed_password)) {
+            // Check if username exists. Verify user exists then verify
+            if ($stmt->num_rows == 1) {
+                // Bind result into variables
+                $stmt->bind_result($id, $username, $hashed_password);
 
-                            // Start a new session
-                            session_start();
+                if ($stmt->fetch()) {
+                    if (password_verify($password, $hashed_password)) {
 
-                            // Store data in sessions
-                            $_SESSION['loggedin'] = true;
-                            $_SESSION['id'] = $id;
-                            $_SESSION['username'] = $username;
+                        // Start a new session
+                        session_start();
 
-                            // Redirect to user to page
-                            header('location: ./dashboard.php');
-                        } else {
-                            // Display an error for passord mismatch
-                            $password_err = 'Invalid password';
-                        }
+                        // Store data in sessions
+                        $_SESSION['loggedin'] = true;
+                        $_SESSION['id'] = $id;
+                        $_SESSION['username'] = $username;
+
+                        // Redirect to user to page
+                        header('location: ./dashboard.php');
+                    } else {
+                        // Display an error for passord mismatch
+                        echo 'Invalid password';
                     }
-                } else {
-                    $username_err = "Username does not exists.";
                 }
             } else {
-                echo "Oops! Something went wrong please try again";
+                echo "Username does not exists.";
             }
-            // Close statement
-            $stmt->close();
+        } else {
+            echo "Oops! Something went wrong please try again";
         }
-
-        // Close connection
-        $mysql_db->close();
+        // Close statement
+        $stmt->close();
     }
+
+    // Close connection
+    $conn->close();
 }
 
 include("./incl/header.php");
@@ -112,9 +109,9 @@ include("./incl/header.php");
                 <div class="col-lg-6">
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
                         <input type="text" class="w-100 form-control border-0 py-3 mb-4" placeholder="Enter Your username" name="username">
-                        <span><?php (!empty($username_err)) ? 'has_error' : ''; ?></span>
+                        <p><?php (!empty($username_err)) ? 'has_error' : ''; ?></p>
                         <input type="password" class="w-100 form-control border-0 py-3 mb-4" placeholder="Password" name="password">
-                        <span><?php (!empty($password_err)) ? 'has_error' : ''; ?></span>
+                        <p><?php (!empty($password_err)) ? 'has_error' : ''; ?></p>
 
                         <button class="w-100 btn form-control border-secondary py-3 bg-white text-primary " type="submit" name="login">Login</button>
                     </form>
@@ -129,17 +126,6 @@ include("./incl/header.php");
     </div>
 </div>
 
-<script>
-    const toggle = document.querySelector(".toggle"),
-        input = document.querySelector(".password");
-    toggle.addEventListener("click", () => {
-        if (input.type === "password") {
-            input.type = "text";
-            toggle.classList.replace("fa-eye-slash", "fa-eye");
-        } else {
-            input.type = "password";
-        }
-    })
-</script>
+
 
 <?php include("incl/footer.php"); ?>

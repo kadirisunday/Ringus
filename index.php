@@ -1,14 +1,17 @@
 <?php
 session_start();
-// include './Admin/admin/init.php';
+
 include("./config/connection.php");
 
-// if (!isset($_SESSION['username'])) {
-//     header("location:Login/login.php");
-// }
+if (!isset($_SESSION['username'])) {
+    include("./includes/header.php");
+} else {
+
+    include("./header_dasboard.php");
+}
 
 
-include("./includes/header.php");
+// include("./includes/header.php");
 
 ?>
 

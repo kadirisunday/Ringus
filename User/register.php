@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	} elseif (strlen(trim($_POST["password"])) < 6) {
 		$password_err = "Password must have atleast 6 characters.";
 	} else {
-		$password = trim($_POST["password"]);
+		$password = password_hash($_POST["password"], PASSWORD_BCRYPT);
 	}
 
 	// Validate confirm password
@@ -102,10 +102,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			// Bind param variable to prepares statement
 			$stmt->bind_param('ssss', $param_fname, $param_email, $param_username, $param_password);
 
+
 			// Attempt to execute
 			if ($stmt->execute()) {
 				// Redirect to login page
-				header('location: ./login.php');
+
+				echo "Registration successful";
+				header('location: ./success.php');
 				// echo "Will  redirect to login page";
 			} else {
 				echo "Something went wrong. Try signing in again.";
@@ -147,10 +150,10 @@ include("./incl/header.php");
 						<input type=" text" class="w-100 form-control border-0 py-3 mb-4" placeholder="Enter Your username" name="username" value="<?php echo $username ?>">
 						<span><?php (!empty($username_err)) ? 'has_error' : ''; ?></span>
 
-						<input type=" password" class="w-100 form-control border-0 py-3 mb-4" placeholder="Password" name="password" value="<?php echo $password ?>">
+						<input type="password" class="w-100 form-control border-0 py-3 mb-4" placeholder="Password" name="password" value="<?php echo $password ?>">
 						<span><?php (!empty($password_err)) ? 'has_error' : ''; ?></span>
 
-						<input type=" password" class="w-100 form-control border-0 py-3 mb-4" placeholder="Confirm Password" name="password" value="<?php echo $confirm_password; ?>">
+						<input type="password" class="w-100 form-control border-0 py-3 mb-4" placeholder="Confirm Password" name="password" value="<?php echo $confirm_password; ?>">
 						<span><?php (!empty($confirm_password_err)) ? 'has_error' : ''; ?></span>
 
 						<div class="form-group">
